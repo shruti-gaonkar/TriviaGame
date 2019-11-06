@@ -1,0 +1,66 @@
+/* Bootstrap css overwritten*/
+html,
+body {
+    height: 100%;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background-image: url("../../assets/images/bg.jpg");
+}
+
+h1{
+    font-family: Georgia, Times, "Times New Roman", serif;
+    font-size: 1.5rem;
+    color: #4aaaa5;
+    font-weight: bold; 
+}
+
+.figure{
+  margin: 1rem!important
+}
+.figure-caption{
+  font-weight: bold;
+  font-size: 1rem;
+  color:#fff;
+}
+
+#enemies_area{
+  background-color: #000;
+}
+
+.alert{
+  padding:0;
+}
+/* End - Bootstrap css overwritten*/
+
+.nav-header{
+  font-family: Georgia, Times, "Times New Roman", serif;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color:#D1C8C8;
+  line-height: 1.7em;
+}
+
+#main-content {
+    flex: 1 0 auto;
+}
+
+.page-content{
+    border: 2px solid #dddddd;
+    background-color: #000;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+#sticky-footer {
+    flex-shrink: none;
+}
+
+.footer {
+    background-color: #000;
+    color: #fff;
+    border-top: 6px solid #C2322B;
+    font-size: 0.8rem;
+}
