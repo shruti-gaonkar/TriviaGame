@@ -31,7 +31,7 @@ var triviaGameObj = {
         //console.log(counter);
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
         var question = triviaGameObj.questAnsArr[counter].q;
-        $("#quest_id").html(question);
+        $("#top_div").html(question);
 
         var optionsObj = triviaGameObj.questAnsArr[counter].a;
 
@@ -40,22 +40,39 @@ var triviaGameObj = {
          */
         var option = '';
         var newDiv = '';
-        $("#ans_id").html('');
+        $("#bottom_id").html('');
         for (var key in optionsObj) {
             option = optionsObj[key];
             newDiv = $("<div>").text(option);
-            $("#ans_id").append(newDiv);
+            newDiv.attr("ansNum", key);
+            newDiv.click(triviaGameObj.showAnswer);
+            $("#bottom_id").append(newDiv);
+
         }
 
-        counter++;
+        /*counter++;
         if (counter <= (questAnsArrLen - 1)) {
-            intervalId = setInterval(triviaGameObj.showQuestion, 2000);
+            //intervalId = setInterval(triviaGameObj.showQuestion, 2000);
             triviaGameObj.questCount++;
         } else {
             //$("#ans_id").html("sdsds");
             clearInterval(intervalId);
+        }*/
+    },
+
+    showAnswer: function () {
+        var ansNum = $(this).attr('ansNum');
+        //console.log(ansNum + "" + "" + counter + triviaGameObj.questAnsArr[counter].answer);
+        if (ansNum == triviaGameObj.questAnsArr[counter].answer) {
+            //console.log(ansNum);
+            var newDiv = '';
+            newDiv = $("<div>").text("Correct");
+            $("#bottom_id").empty();
+            $("#bottom_id").append(newDiv);
+            counter++;
+            intervalId = setInterval(triviaGameObj.showQuestion, 5000);
         }
-
-
     }
+
+
 }
