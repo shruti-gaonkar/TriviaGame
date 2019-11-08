@@ -1,10 +1,20 @@
 window.onload = function () {
-    triviaGameObj.showQuestion();
+    $("#start_btn").on("click", triviaGameObj.showQuestion);
 };
 
-var counter = 0;
+var next = 0;
 var intervalId;
+var intervalId1;
+var correctAns = 0;
+var incorrectAns = 0;
+var unanswered = 0;
+var secondsRunning = false;
+var qTimeOut = '';
+var rTimeOut = '';
+var secs = 5;
+
 var triviaGameObj = {
+    timer: secs,
     questAnsArr: [
         {
             "q": "what is a volcano?",
@@ -28,27 +38,34 @@ var triviaGameObj = {
         }],
 
     showQuestion: function () {
-        //console.log(counter);
+        //console.log(next);
+        triviaGameObj.resetTimer();
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
-        var question = triviaGameObj.questAnsArr[counter].q;
+        var question = triviaGameObj.questAnsArr[next].q;
         $("#top_div").html(question);
 
-        var optionsObj = triviaGameObj.questAnsArr[counter].a;
+        var optionsObj = triviaGameObj.questAnsArr[next].a;
 
         /**
          * Display the options for an answer
          */
         var option = '';
         var newDiv = '';
-        $("#bottom_id").html('');
+        $("#bottom_div").empty();
         for (var key in optionsObj) {
             option = optionsObj[key];
             newDiv = $("<div>").text(option);
             newDiv.attr("ansNum", key);
             newDiv.click(triviaGameObj.showAnswer);
-            $("#bottom_id").append(newDiv);
+            $("#bottom_div").append(newDiv);
 
         }
+
+        if (!secondsRunning) {
+            intervalId = setInterval(triviaGameObj.setTimer, 1000);
+            secondsRunning = true;
+        }
+
 
         /*counter++;
         if (counter <= (questAnsArrLen - 1)) {
@@ -60,19 +77,79 @@ var triviaGameObj = {
         }*/
     },
 
+    setTimer: function () {
+        $("#top_div").text("Time Remaining: " + triviaGameObj.timer--);
+    },
+
     showAnswer: function () {
+        //triviaGameObj.resetTimer();
         var ansNum = $(this).attr('ansNum');
-        //console.log(ansNum + "" + "" + counter + triviaGameObj.questAnsArr[counter].answer);
-        if (ansNum == triviaGameObj.questAnsArr[counter].answer) {
+        var message;
+        //console.log(ansNum);
+        var correctAnswerIndex = triviaGameObj.questAnsArr[next].answer;
+        var correctAnswer = triviaGameObj.questAnsArr[next].a[correctAnswerIndex];
+        //console.log(ansNum + " " + correctAnswerIndex);
+        if (ansNum == correctAnswerIndex) {
             //console.log(ansNum);
-            var newDiv = '';
-            newDiv = $("<div>").text("Correct");
-            $("#bottom_id").empty();
-            $("#bottom_id").append(newDiv);
-            counter++;
-            intervalId = setInterval(triviaGameObj.showQuestion, 5000);
+            message = "Correct";
+            correctAns++;
+        } else {
+            message = "Nope!";
+            message += "The correct answer was " + correctAnswer;
+            incorrectAns++;
         }
+        //console.log(message);
+        triviaGameObj.showMessage({ msg: message });
+
+        var questAnsArrLen = triviaGameObj.questAnsArr.length;
+        //console.log(next + "==" + (questAnsArrLen - 1));
+
+        //if (!secondsRunning) {
+        // intervalId = setInterval(triviaGameObj.showQuestion, 5000);
+        //secondsRunning = true;
+        //}
+
+        if (next == (questAnsArrLen - 1)) {
+            //clearInterval(intervalId);
+            //secondsRunning = false;
+            rTimeOut = setTimeout(triviaGameObj.showResult, triviaGameObj.timer + '000');
+        } else {
+            qTimeOut = setTimeout(triviaGameObj.showQuestion, triviaGameObj.timer + '000');
+        }
+        next++;
+
+        //console.log("increment next");
+        //triviaGameObj.resetTimer();
+        clearInterval(intervalId);
+        secondsRunning = false;
+    },
+
+    showResult: function () {
+        var message = '';
+        message = "All done.";
+        triviaGameObj.showMessage({ msg: message });
+
+        message = "Correct Answers:" + correctAns;
+        message += "Incorrect Answers:" + incorrectAns;
+        message += "Unanswered:" + unanswered;
+        triviaGameObj.showMessage({ msg: message });
+
+        triviaGameObj.resetTimer();
+    },
+
+    showMessage: function (objParams) {
+        var newDiv = '';
+        newDiv = $("<div>").text(objParams.msg);
+        var parentDiv = (objParams.div) ? objParams.div : "bottom_div";
+        $("#" + parentDiv).empty();
+        $("#" + parentDiv).append(newDiv);
+    },
+
+    resetTimer: function () {
+        triviaGameObj.timer = secs;
+        clearTimeout(qTimeOut);
+        clearTimeout(rTimeOut);
+        clearInterval(intervalId);
+        secondsRunning = false;
     }
-
-
 }
