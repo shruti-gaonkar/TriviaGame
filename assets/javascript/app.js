@@ -1,19 +1,20 @@
 window.onload = function () {
     $("#start_btn").on("click", triviaGameObj.showQuestion);
+
+    $(document).on("click", ".start_over_btn", triviaGameObj.showQuestion);
 };
 
 var next = 0;
-var intervalId;
-var intervalId1;
 var correctAns = 0;
 var incorrectAns = 0;
 var unanswered = 0;
+var intervalId;
 var secondsRunning = false;
-var qTimeOut = '';
-var rTimeOut = '';
-var aTimeOut = '';
+var qTimeOut;
+var rTimeOut;
+var aTimeOut;
 var secs = 5;
-var newTimer = 0;
+var timerTemp = 0;
 
 var triviaGameObj = {
     timer: secs,
@@ -42,9 +43,23 @@ var triviaGameObj = {
     showQuestion: function () {
         //console.log(next);
         triviaGameObj.resetTimer();
+        if ($(this).hasClass('start_over_btn')) {
+            next = 0;
+            correctAns = 0;
+            incorrectAns = 0;
+            unanswered = 0;
+        }
+        triviaGameObj.setTimer();
+
+        if (!secondsRunning) {
+            intervalId = setInterval(triviaGameObj.setTimer, 1000);
+            secondsRunning = true;
+        }
+
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
         var question = triviaGameObj.questAnsArr[next].q;
-        $("#top_div").html(question);
+        $("#bottom_div").empty();
+        $("#bottom_div").html(question);
 
         var optionsObj = triviaGameObj.questAnsArr[next].a;
 
@@ -53,7 +68,7 @@ var triviaGameObj = {
          */
         var option = '';
         var newDiv = '';
-        $("#bottom_div").empty();
+
         for (var key in optionsObj) {
             option = optionsObj[key];
             newDiv = $("<div>").text(option);
@@ -63,26 +78,12 @@ var triviaGameObj = {
 
         }
 
-        if (!secondsRunning) {
-            intervalId = setInterval(triviaGameObj.setTimer, 1000);
-            secondsRunning = true;
-        }
-
-        aTimeOut = setTimeout(triviaGameObj.showAnswer, triviaGameObj.timer + '000');
-
-        /*counter++;
-        if (counter <= (questAnsArrLen - 1)) {
-            //intervalId = setInterval(triviaGameObj.showQuestion, 2000);
-            triviaGameObj.questCount++;
-        } else {
-            //$("#ans_id").html("sdsds");
-            clearInterval(intervalId);
-        }*/
+        aTimeOut = setTimeout(triviaGameObj.showAnswer, (triviaGameObj.timer + 1) + '000');
     },
 
     setTimer: function () {
-        newTimer = triviaGameObj.timer--;
-        $("#top_div").text("Time Remaining: " + newTimer);
+        timerTemp = triviaGameObj.timer--;
+        $("#top_div").html("Time Remaining: " + timerTemp);
     },
 
     showAnswer: function () {
@@ -94,8 +95,8 @@ var triviaGameObj = {
         var correctAnswer = triviaGameObj.questAnsArr[next].a[correctAnswerIndex];
         //console.log(ansNum + " " + correctAnswerIndex);
         //var newTimer = triviaGameObj.timer;
-        console.log(newTimer);
-        if (newTimer == 1) {
+        console.log(timerTemp);
+        if (timerTemp == 0) {
             message = "Out of Time";
             message += "The correct answer was " + correctAnswer;
             unanswered++;
@@ -143,14 +144,28 @@ var triviaGameObj = {
         message = "Correct Answers:" + correctAns;
         message += "Incorrect Answers:" + incorrectAns;
         message += "Unanswered:" + unanswered;
-        triviaGameObj.showMessage({ msg: message });
+
+        //message += $("<div>").append("<button>Start Over</button>");
+
+        var a = $("<button>");
+        // Adding a class of movie to our button
+        a.addClass("start_over_btn");
+        // Providing the initial button text
+        a.text("Start Over");
+        // Adding the button to the buttons-view div
+        // var start_over_div = $("<div>").append(a);
+
+        $("#bottom_div").append(a);
+        //message += start_over_div;
+
+        //triviaGameObj.showMessage({ msg: message });
 
         triviaGameObj.resetTimer();
     },
 
     showMessage: function (objParams) {
         var newDiv = '';
-        newDiv = $("<div>").text(objParams.msg);
+        newDiv = $("<div>").html(objParams.msg);
         var parentDiv = (objParams.div) ? objParams.div : "bottom_div";
         $("#" + parentDiv).empty();
         $("#" + parentDiv).append(newDiv);
