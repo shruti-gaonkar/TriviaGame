@@ -20,25 +20,66 @@ var triviaGameObj = {
     timer: secs,
     questAnsArr: [
         {
-            "q": "what is a volcano?",
+            "q": "Which popular TV show featured house Targaryen and Stark?",
             "a": {
-                1: "mountain",
-                2: "opening which discharges lava",
-                3: "crater",
-                4: "deadly wave"
+                1: "Stranger Things",
+                2: "Game of Thrones",
+                3: "The Crown",
+                4: "The Good Place"
             },
             "answer": 2
         },
         {
-            "q": "what is pluto?",
+            "q": "Which desert is the largest in the world?",
             "a": {
-                1: "biggest planet",
-                2: "smallest planet",
-                3: "dwarf planet",
-                4: "gas giant"
+                1: "Thar Desert",
+                2: "The Sahara Desert",
+                3: "Great Basin",
+                4: "Great Victoria Desert"
+            },
+            "answer": 2
+        },
+        {
+            "q": "Which cartoon character lives in a pineapple under the sea?",
+            "a": {
+                1: "Doraemon",
+                2: "Bugs Bunny",
+                3: "Spongebob Squarepants",
+                4: "Mickey Mouse"
             },
             "answer": 3
-        }],
+        },
+        {
+            "q": "In which body part can you find the femur?",
+            "a": {
+                1: "Leg",
+                2: "Arm",
+                3: "Neck",
+                4: "Chest"
+            },
+            "answer": 1
+        },
+        {
+            "q": "Which country invented tea?",
+            "a": {
+                1: "India",
+                2: "Thailand",
+                3: "China",
+                4: "Malaysia"
+            },
+            "answer": 3
+        },
+        {
+            "q": "Which planet has the most gravity?",
+            "a": {
+                1: "Earth",
+                2: "Saturn",
+                3: "Mars",
+                4: "Jupiter"
+            },
+            "answer": 4
+        }
+    ],
 
     showQuestion: function () {
         triviaGameObj.resetTimer();
