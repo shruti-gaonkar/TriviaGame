@@ -41,7 +41,6 @@ var triviaGameObj = {
         }],
 
     showQuestion: function () {
-        //console.log(next);
         triviaGameObj.resetTimer();
         if ($(this).hasClass('start_over_btn')) {
             next = 0;
@@ -73,6 +72,7 @@ var triviaGameObj = {
             option = optionsObj[key];
             newDiv = $("<div>").text(option);
             newDiv.attr("ansNum", key);
+            newDiv.addClass("option_text cursor-pointer")
             newDiv.click(triviaGameObj.showAnswer);
             $("#bottom_div").append(newDiv);
 
@@ -83,82 +83,64 @@ var triviaGameObj = {
 
     setTimer: function () {
         timerTemp = triviaGameObj.timer--;
-        $("#top_div").html("Time Remaining: " + timerTemp);
+        var timerDiv = $("<div>").text("Time Remaining: " + timerTemp + " Seconds");
+        timerDiv.addClass("pb-3");
+        $("#top_div").html(timerDiv);
     },
 
     showAnswer: function () {
         triviaGameObj.resetTimer();
         var ansNum = $(this).attr('ansNum');
         var message;
-        //console.log(ansNum);
         var correctAnswerIndex = triviaGameObj.questAnsArr[next].answer;
         var correctAnswer = triviaGameObj.questAnsArr[next].a[correctAnswerIndex];
-        //console.log(ansNum + " " + correctAnswerIndex);
-        //var newTimer = triviaGameObj.timer;
+
         console.log(timerTemp);
         if (timerTemp == 0) {
-            message = "Out of Time";
-            message += "The correct answer was " + correctAnswer;
+            message = "Out of Time!<br />";
+            message += "The correct answer was: " + correctAnswer;
             unanswered++;
-            //newTimer = triviaGameObj.timer;
         } else if (ansNum == correctAnswerIndex) {
-            //console.log(ansNum);
-            message = "Correct";
+            message = "Correct!<br />";
             correctAns++;
         } else {
-            message = "Nope!";
-            message += "The correct answer was " + correctAnswer;
+            message = "Nope!<br />";
+            message += "The correct answer was: " + correctAnswer;
             incorrectAns++;
         }
-        //console.log(message);
+
         triviaGameObj.showMessage({ msg: message });
 
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
-        //console.log(next + "==" + (questAnsArrLen - 1));
-
-        //if (!secondsRunning) {
-        // intervalId = setInterval(triviaGameObj.showQuestion, 5000);
-        //secondsRunning = true;
-        //}
 
         if (next == (questAnsArrLen - 1)) {
-            //clearInterval(intervalId);
-            //secondsRunning = false;
             rTimeOut = setTimeout(triviaGameObj.showResult, triviaGameObj.timer + '000');
         } else {
             qTimeOut = setTimeout(triviaGameObj.showQuestion, triviaGameObj.timer + '000');
         }
         next++;
 
-        //console.log("increment next");
-        //triviaGameObj.resetTimer();
         clearInterval(intervalId);
         secondsRunning = false;
     },
 
     showResult: function () {
         var message = '';
-        message = "All done.";
+        message = "All done, here's how you did!<br />";
+
+        message += "Correct Answers: " + correctAns + "<br />";
+        message += "Incorrect Answers: " + incorrectAns + "<br />";
+        message += "Unanswered: " + unanswered + "<br />";
+
         triviaGameObj.showMessage({ msg: message });
 
-        message = "Correct Answers:" + correctAns;
-        message += "Incorrect Answers:" + incorrectAns;
-        message += "Unanswered:" + unanswered;
-
-        //message += $("<div>").append("<button>Start Over</button>");
-
         var a = $("<button>");
-        // Adding a class of movie to our button
-        a.addClass("start_over_btn");
+        // Adding a classes to start over button
+        a.addClass("start_over_btn btn btn-warning btn-lg mt-5");
         // Providing the initial button text
-        a.text("Start Over");
-        // Adding the button to the buttons-view div
-        // var start_over_div = $("<div>").append(a);
+        a.text("Start Over?");
 
         $("#bottom_div").append(a);
-        //message += start_over_div;
-
-        //triviaGameObj.showMessage({ msg: message });
 
         triviaGameObj.resetTimer();
     },
