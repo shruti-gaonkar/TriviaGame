@@ -27,7 +27,8 @@ var triviaGameObj = {
                 3: "The Crown",
                 4: "The Good Place"
             },
-            "answer": 2
+            "answer": 2,
+            "image": "https://media.giphy.com/media/4CsGr6QNDSNri/giphy.gif"
         },
         {
             "q": "Which desert is the largest in the world?",
@@ -37,7 +38,8 @@ var triviaGameObj = {
                 3: "Great Basin",
                 4: "Great Victoria Desert"
             },
-            "answer": 2
+            "answer": 2,
+            "image": "https://media.giphy.com/media/PR3o1Xxx4xADC/giphy.gif"
         },
         {
             "q": "Which cartoon character lives in a pineapple under the sea?",
@@ -47,7 +49,8 @@ var triviaGameObj = {
                 3: "Spongebob Squarepants",
                 4: "Mickey Mouse"
             },
-            "answer": 3
+            "answer": 3,
+            "image": "http://giphygifs.s3.amazonaws.com/media/nDSlfqf0gn5g4/giphy.gif"
         },
         {
             "q": "In which body part can you find the femur?",
@@ -57,7 +60,8 @@ var triviaGameObj = {
                 3: "Neck",
                 4: "Chest"
             },
-            "answer": 1
+            "answer": 1,
+            "image": "https://media.giphy.com/media/l3nWkBDBuZ7HBRrkQ/giphy.gif"
         },
         {
             "q": "Which country invented tea?",
@@ -67,7 +71,8 @@ var triviaGameObj = {
                 3: "China",
                 4: "Malaysia"
             },
-            "answer": 3
+            "answer": 3,
+            "image": "https://media.giphy.com/media/l2YWgcxIZ0vn1ZmaQ/giphy.gif"
         },
         {
             "q": "Which planet has the most gravity?",
@@ -77,7 +82,8 @@ var triviaGameObj = {
                 3: "Mars",
                 4: "Jupiter"
             },
-            "answer": 4
+            "answer": 4,
+            "image": "https://media.giphy.com/media/s2uampOAMWksU/giphy.gif"
         }
     ],
 
@@ -134,9 +140,9 @@ var triviaGameObj = {
         var ansNum = $(this).attr('ansNum');
         var message;
         var correctAnswerIndex = triviaGameObj.questAnsArr[next].answer;
+        var correctAnswerImage = triviaGameObj.questAnsArr[next].image;
         var correctAnswer = triviaGameObj.questAnsArr[next].a[correctAnswerIndex];
 
-        console.log(timerTemp);
         if (timerTemp == 0) {
             message = "Out of Time!<br />";
             message += "The correct answer was: " + correctAnswer;
@@ -151,6 +157,10 @@ var triviaGameObj = {
         }
 
         triviaGameObj.showMessage({ msg: message });
+
+        var img = $("<img>");
+        img.attr("src", correctAnswerImage);
+        $("#bottom_div").append(img);
 
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
 

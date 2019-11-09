@@ -42,6 +42,10 @@ h1{
   font-weight:bold;
 }
 
+img{
+  width: 300px;
+}
+
 .cursor-pointer{
   cursor: pointer;
 }
