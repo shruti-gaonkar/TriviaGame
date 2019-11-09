@@ -1,9 +1,12 @@
 window.onload = function () {
+    // start button
     $("#start_btn").on("click", triviaGameObj.showQuestion);
 
+    // binding on click event to start over button when created
     $(document).on("click", ".start_over_btn", triviaGameObj.showQuestion);
 };
 
+// global variables
 var next = 0;
 var correctAns = 0;
 var incorrectAns = 0;
@@ -13,9 +16,13 @@ var secondsRunning = false;
 var qTimeOut;
 var rTimeOut;
 var aTimeOut;
-var secs = 5;
+var secs = 30;
 var timerTemp = 0;
 
+/**
+ * initialising trivia game object
+ * initialising the question and answer array - question, answer options, correct answer, answer image
+ */
 var triviaGameObj = {
     timer: secs,
     questAnsArr: [
@@ -87,14 +94,21 @@ var triviaGameObj = {
         }
     ],
 
+    /**
+     * function to show each question based on the next counter 
+     */
     showQuestion: function () {
+        // reset timer and intervals each time the question is shown
         triviaGameObj.resetTimer();
+
+        // when game is restarted reset extra variables other than timers
         if ($(this).hasClass('start_over_btn')) {
             next = 0;
             correctAns = 0;
             incorrectAns = 0;
             unanswered = 0;
         }
+        // start to display timer and call timer function every sec to display the seconds countdown
         triviaGameObj.setTimer();
 
         if (!secondsRunning) {
@@ -102,16 +116,14 @@ var triviaGameObj = {
             secondsRunning = true;
         }
 
+        // get the question and display based on next counter
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
         var question = triviaGameObj.questAnsArr[next].q;
         $("#bottom_div").empty();
         $("#bottom_div").html(question);
 
+        // Display the list of answer options for a question
         var optionsObj = triviaGameObj.questAnsArr[next].a;
-
-        /**
-         * Display the options for an answer
-         */
         var option = '';
         var newDiv = '';
 
@@ -125,9 +137,14 @@ var triviaGameObj = {
 
         }
 
+        // Show answer if timer reaches 0. Added +1 to timer to stop timer at 0 
+        // else it was stopping to 1 
         aTimeOut = setTimeout(triviaGameObj.showAnswer, (triviaGameObj.timer + 1) + '000');
     },
 
+    /**
+     * function to display the timer
+     */
     setTimer: function () {
         timerTemp = triviaGameObj.timer--;
         var timerDiv = $("<div>").text("Time Remaining: " + timerTemp + " Seconds");
@@ -135,14 +152,23 @@ var triviaGameObj = {
         $("#top_div").html(timerDiv);
     },
 
+    /**
+     * function to show the result based on user input
+     */
     showAnswer: function () {
+        // reset timer and intervals each time the question is shown
         triviaGameObj.resetTimer();
+
+        // the ansNum attr returns the index of answer that was clicked
         var ansNum = $(this).attr('ansNum');
         var message;
+
+        // get answer, image based on ansNum attribute
         var correctAnswerIndex = triviaGameObj.questAnsArr[next].answer;
         var correctAnswerImage = triviaGameObj.questAnsArr[next].image;
         var correctAnswer = triviaGameObj.questAnsArr[next].a[correctAnswerIndex];
 
+        // display messages based on user input
         if (timerTemp == 0) {
             message = "Out of Time!<br />";
             message += "The correct answer was: " + correctAnswer;
@@ -158,6 +184,7 @@ var triviaGameObj = {
 
         triviaGameObj.showMessage({ msg: message });
 
+        // append image to the message
         var img = $("<img>");
         img.attr("src", correctAnswerImage);
         $("#bottom_div").append(img);
@@ -165,14 +192,16 @@ var triviaGameObj = {
         var questAnsArrLen = triviaGameObj.questAnsArr.length;
 
         if (next == (questAnsArrLen - 1)) {
-            rTimeOut = setTimeout(triviaGameObj.showResult, triviaGameObj.timer + '000');
+            // if last question then show results
+            rTimeOut = setTimeout(triviaGameObj.showResult, 5000);
         } else {
-            qTimeOut = setTimeout(triviaGameObj.showQuestion, triviaGameObj.timer + '000');
+            // go to next question if not reached last question
+            qTimeOut = setTimeout(triviaGameObj.showQuestion, 5000);
         }
         next++;
 
-        clearInterval(intervalId);
-        secondsRunning = false;
+        //clearInterval(intervalId);
+        //secondsRunning = false;
     },
 
     showResult: function () {
@@ -186,16 +215,19 @@ var triviaGameObj = {
         triviaGameObj.showMessage({ msg: message });
 
         var a = $("<button>");
-        // Adding a classes to start over button
+        // Adding classes to start over button  to initiate the on click event on line 6
         a.addClass("start_over_btn btn btn-warning btn-lg mt-5");
         // Providing the initial button text
         a.text("Start Over?");
-
         $("#bottom_div").append(a);
 
         triviaGameObj.resetTimer();
     },
 
+    /**
+     * 
+     * @param {obj} objParams message and div to  be appended to
+     */
     showMessage: function (objParams) {
         var newDiv = '';
         newDiv = $("<div>").html(objParams.msg);
@@ -204,6 +236,9 @@ var triviaGameObj = {
         $("#" + parentDiv).append(newDiv);
     },
 
+    /**
+     * function to reset timer and intervals
+     */
     resetTimer: function () {
         triviaGameObj.timer = secs;
         clearTimeout(qTimeOut);
