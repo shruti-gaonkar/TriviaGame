@@ -40,6 +40,8 @@ h1{
 .option_text{
   font-size:1.8rem;
   font-weight:bold;
+  width:50%;
+  margin:0 auto;
 }
 
 img{
