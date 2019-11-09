@@ -11,7 +11,9 @@ var unanswered = 0;
 var secondsRunning = false;
 var qTimeOut = '';
 var rTimeOut = '';
+var aTimeOut = '';
 var secs = 5;
+var newTimer = 0;
 
 var triviaGameObj = {
     timer: secs,
@@ -66,6 +68,7 @@ var triviaGameObj = {
             secondsRunning = true;
         }
 
+        aTimeOut = setTimeout(triviaGameObj.showAnswer, triviaGameObj.timer + '000');
 
         /*counter++;
         if (counter <= (questAnsArrLen - 1)) {
@@ -78,18 +81,26 @@ var triviaGameObj = {
     },
 
     setTimer: function () {
-        $("#top_div").text("Time Remaining: " + triviaGameObj.timer--);
+        newTimer = triviaGameObj.timer--;
+        $("#top_div").text("Time Remaining: " + newTimer);
     },
 
     showAnswer: function () {
-        //triviaGameObj.resetTimer();
+        triviaGameObj.resetTimer();
         var ansNum = $(this).attr('ansNum');
         var message;
         //console.log(ansNum);
         var correctAnswerIndex = triviaGameObj.questAnsArr[next].answer;
         var correctAnswer = triviaGameObj.questAnsArr[next].a[correctAnswerIndex];
         //console.log(ansNum + " " + correctAnswerIndex);
-        if (ansNum == correctAnswerIndex) {
+        //var newTimer = triviaGameObj.timer;
+        console.log(newTimer);
+        if (newTimer == 1) {
+            message = "Out of Time";
+            message += "The correct answer was " + correctAnswer;
+            unanswered++;
+            //newTimer = triviaGameObj.timer;
+        } else if (ansNum == correctAnswerIndex) {
             //console.log(ansNum);
             message = "Correct";
             correctAns++;
@@ -149,6 +160,7 @@ var triviaGameObj = {
         triviaGameObj.timer = secs;
         clearTimeout(qTimeOut);
         clearTimeout(rTimeOut);
+        clearTimeout(aTimeOut);
         clearInterval(intervalId);
         secondsRunning = false;
     }
